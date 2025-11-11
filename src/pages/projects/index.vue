@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient';
-import { h, ref } from 'vue';
 import type { Tables } from '../../../database/types';
 import type { ColumnDef } from '@tanstack/vue-table';
-import DataTable from '@/components/ui/data-table/DataTable.vue';
 import { RouterLink } from 'vue-router';
 
 const projects = ref<Tables<'projects'>[] | null>(null);
@@ -13,8 +11,6 @@ const projects = ref<Tables<'projects'>[] | null>(null);
   if (error) console.log(error);
 
   projects.value = data;
-
-  console.log('projects: ', projects.value);
 })();
 
 const columns: ColumnDef<Tables<'projects'>>[] = [
@@ -56,3 +52,14 @@ const columns: ColumnDef<Tables<'projects'>>[] = [
 <template>
   <DataTable v-if="projects" :columns="columns" :data="projects" />
 </template>
+
+<!--
+<template>
+  <DataTable v-if="projects" :columns="columns" :data="projects">
+    <template #cell-name="{ cell }">
+      <RouterLink :to="`/projects/${cell.original.slug}`" class="text-blue-600 hover:underline">
+        {{ cell }}
+      </RouterLink>
+    </template>
+  </DataTable>
+</template>-->

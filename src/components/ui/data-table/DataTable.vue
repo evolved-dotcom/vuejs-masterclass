@@ -2,15 +2,6 @@
 import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -61,6 +52,14 @@ const table = useVueTable({
       </TableBody>
     </Table>
   </div>
+
+  <!--  <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+    &lt;!&ndash;              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />&ndash;&gt;
+    &lt;!&ndash;              {{ cell.getValue() }}&ndash;&gt;
+    <slot :name="`cell-${cell.column.id}`" :cell="cell">
+      {{ cell.getValue() }}
+    </slot>
+  </TableCell>-->
 </template>
 
 <style scoped>
