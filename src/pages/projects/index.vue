@@ -3,15 +3,19 @@ import { supabase } from '@/lib/supabaseClient';
 import type { Tables } from '../../../database/types';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { RouterLink } from 'vue-router';
+import { usePageStore } from '@/stores/page.ts';
+
+usePageStore().pageData.title = 'Projects page';
 
 const projects = ref<Tables<'projects'>[] | null>(null);
-(async () => {
+const getProjects = async () => {
   const { data, error } = await supabase.from('projects').select();
 
   if (error) console.log(error);
 
   projects.value = data;
-})();
+};
+await getProjects();
 
 const columns: ColumnDef<Tables<'projects'>>[] = [
   {

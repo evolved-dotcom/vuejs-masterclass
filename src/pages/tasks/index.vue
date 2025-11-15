@@ -3,16 +3,29 @@ import { supabase } from '@/lib/supabaseClient.ts';
 import type { Tables } from '../../../database/types.ts';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { RouterLink } from 'vue-router';
+import { usePageStore } from '@/stores/page.ts';
 const tasks = ref<Tables<'tasks'>[] | null>(null);
 
-(async () => {
-  const { data, error } = await supabase.from('tasks').select();
+usePageStore().pageData.title = 'Tasks page';
+
+const getTask = async () => {
+  const { data, error } = await supabase.from('tasks').select(`
+    *,
+    projects(
+      id,
+      name,
+      slug
+    )
+  `);
+  console.log(data);
   if (error) {
     console.error('Error fetching tasks:', error);
   } else {
     tasks.value = data;
   }
-})();
+};
+
+await getTask();
 
 const columns: ColumnDef<Tables<'tasks'>>[] = [
   {
@@ -44,10 +57,17 @@ const columns: ColumnDef<Tables<'tasks'>>[] = [
     },
   },
   {
-    accessorKey: 'project_id',
+    accessorKey: 'projects',
     header: () => h('div', { class: 'text-left' }, 'Project'),
     cell: ({ row }) => {
-      return h('div', { class: 'text-left' }, row.getValue('project_id'));
+      return h(
+        RouterLink,
+        {
+          to: `/projects/${row.original.projects.slug}`,
+          class: 'text-left font-medium hover:bg-muted block w-full',
+        },
+        () => row.getValue('projects').name,
+      );
     },
   },
   {
