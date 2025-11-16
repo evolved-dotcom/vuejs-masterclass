@@ -1,69 +1,21 @@
 <script setup lang="ts">
-import { supabase } from '@/lib/supabaseClient';
-import type { Tables } from '../../../database/types';
-import type { ColumnDef } from '@tanstack/vue-table';
-import { RouterLink } from 'vue-router';
 import { usePageStore } from '@/stores/page.ts';
+import { type Projects, projectsQuery } from '@/utils/supaQueries.ts';
+import { columns } from '@/utils/tableColumns/projectColumns.ts';
 
 usePageStore().pageData.title = 'Projects page';
 
-const projects = ref<Tables<'projects'>[] | null>(null);
+const projects = ref<Projects | null>(null);
 const getProjects = async () => {
-  const { data, error } = await supabase.from('projects').select();
+  const { data, error } = await projectsQuery;
 
   if (error) console.log(error);
 
   projects.value = data;
 };
 await getProjects();
-
-const columns: ColumnDef<Tables<'projects'>>[] = [
-  {
-    accessorKey: 'name',
-    header: () => h('div', { class: 'text-left' }, 'Name'),
-    cell: ({ row }) => {
-      return h(
-        RouterLink,
-        {
-          to: `/projects/${row.original.slug}`,
-          class: 'text-left font-medium hover:bg-muted block w-full',
-        },
-        () => row.getValue('name'),
-      );
-    },
-  },
-  {
-    accessorKey: 'status',
-    header: () => h('div', { class: 'text-left' }, 'Status'),
-    cell: ({ row }) => {
-      return h('div', { class: 'text-left font-medium' }, row.getValue('status'));
-    },
-  },
-  {
-    accessorKey: 'collaborators',
-    header: () => h('div', { class: 'text-left' }, 'Collaborators'),
-    cell: ({ row }) => {
-      return h(
-        'div',
-        { class: 'text-left font-medium' },
-        JSON.stringify(row.getValue('collaborators')),
-      );
-    },
-  },
-];
 </script>
 
 <template>
   <DataTable v-if="projects" :columns="columns" :data="projects" />
 </template>
-
-<!--
-<template>
-  <DataTable v-if="projects" :columns="columns" :data="projects">
-    <template #cell-name="{ cell }">
-      <RouterLink :to="`/projects/${cell.original.slug}`" class="text-blue-600 hover:underline">
-        {{ cell }}
-      </RouterLink>
-    </template>
-  </DataTable>
-</template>-->
