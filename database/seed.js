@@ -27,7 +27,11 @@ const seedProjects = async (numEntries) => {
       name: name,
       slug: name.toLocaleLowerCase().replace(/ /g, '-'),
       status: faker.helpers.arrayElement(['in-progress', 'completed']),
-      collaborators: faker.helpers.arrayElements([1, 2, 3]),
+            collaborators: faker.helpers.arrayElements([
+        faker.person.fullName(),
+        faker.person.fullName(),
+        faker.person.fullName(),
+      ]),
     });
   }
 
@@ -51,7 +55,11 @@ const seedTasks = async (numEntries, projectsIds) => {
       description: faker.lorem.paragraph(),
       due_date: faker.date.future(),
       project_id: faker.helpers.arrayElement(projectsIds),
-      collaborators: faker.helpers.arrayElements([1, 2, 3]),
+            collaborators: faker.helpers.arrayElements([
+        faker.person.fullName(),
+        faker.person.fullName(),
+        faker.person.fullName(),
+      ]),
     });
   }
 
