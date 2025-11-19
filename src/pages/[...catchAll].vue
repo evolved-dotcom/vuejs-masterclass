@@ -1,9 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useErrorStore } from '@/stores/error.ts';
 
-<template>
-  <div>
-    <h1>404 NOT FOUND</h1>
-  </div>
-</template>
-
-<style scoped></style>
+useErrorStore().setActiveError({
+  customCode: 404,
+  error: 'The page you are looking for does not exist.',
+});
+</script>

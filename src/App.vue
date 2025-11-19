@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const errorStore = useErrorStore();
+</script>
 
 <template>
   <AuthLayout>
-    <RouterView v-slot:="{ Component, route }">
+    <ErrorPage v-if="errorStore.activeError" />
+    <RouterView v-else v-slot:="{ Component, route }">
       <Suspense :timeout="0">
         <Component :is="Component" :key="route.name" />
         <template #fallback>
